@@ -1,0 +1,53 @@
+---
+- hosts: locker
+  become: yes
+  tasks:
+    - name: Ensure /opt/document-locker directory exists
+      file:
+        path: /opt/document-locker
+        state: directory
+        mode: '0755'
+
+    - name: Install Python 3 and pip
+      apt:
+        name:
+          - python3
+          - python3-pip
+        state: present
+        update_cache: yes
+
+    - name: Install required Python packages
+      pip:
+        name:
+          - flask
+          - flask-cors
+          - boto3
+          - python-dotenv
+        executable: pip3
+
+    - name: Copy Flask app to server
+      copy:
+        src: files/app.py
+        dest: /opt/document-locker/app.py
+        mode: '0644'
+
+    - name: Copy frontend files to server
+      copy:
+        src: ../frontend/
+        dest: /opt/document-locker/frontend/
+        mode: '0644'
+
+    - name: Copy .env file to server (if present)
+      copy:
+        src: files/.env
+        dest: /opt/document-locker/.env
+        mode: '0600'
+      ignore_errors: yes
+
+    - name: Start Flask app (simple, for demo)
+      shell: |
+        nohup python3 /opt/document-locker/app.py &
+      args:
+        chdir: /opt/document-locker
+      async: 30
+      poll: 0 

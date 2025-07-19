@@ -1,0 +1,23 @@
+# Python files
+__pycache__/
+*.pyc
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+*.swp
+
+# Environment secrets
+.env
+
+# Terraform state & secrets
+*.tfstate
+*.tfstate.backup
+.terraform/
+terraform.tfvars
+
+# AWS keys (if ever saved)
+*.pem
+*.key
+*.crt
+*.aws
